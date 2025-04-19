@@ -12,7 +12,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 Аутентификация
+
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}auth/login/`, credentials);
   }
@@ -22,7 +22,7 @@ export class ApiService {
   }
 
   register(userData: { username: string; email?: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}auth/register/`, userData);
+    return this.http.post(`${this.apiUrl}register/`, userData);
   }
 
   // 🎤 Артисты
@@ -34,7 +34,7 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}artists/`, artistData, { headers: this.getAuthHeaders() });
   }
 
-  // 💿 Альбомы
+ 
   getAlbums(): Observable<any> {
     return this.http.get(`${this.apiUrl}albums/`, { headers: this.getAuthHeaders() });
   }
@@ -55,7 +55,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}albums/${id}/`, { headers: this.getAuthHeaders() });
   }
 
-  // 🎵 Песни
+ 
   getSongs(): Observable<any> {
     return this.http.get(`${this.apiUrl}songs/`, { headers: this.getAuthHeaders() });
   }
@@ -76,7 +76,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}songs/${id}/`, { headers: this.getAuthHeaders() });
   }
 
-  // 📹 Видео
+
   getVideos(): Observable<any> {
     return this.http.get(`${this.apiUrl}videos/`, { headers: this.getAuthHeaders() });
   }
@@ -93,7 +93,7 @@ export class ApiService {
     return this.http.delete(`${this.apiUrl}videos/${id}/`, { headers: this.getAuthHeaders() });
   }
 
-  // 🔧 Хелпер для заголовков авторизации
+
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token') || '';
     return new HttpHeaders({
