@@ -96,9 +96,7 @@ REST_FRAMEWORK = {
     )
 }
 
-CORS_ALLOWED_ORIGINS = [
-        "http://localhost:4200",
-    ]
+CORS_ALLOW_ALL_ORIGINS = True 
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=4),
