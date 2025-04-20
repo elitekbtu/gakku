@@ -1,11 +1,11 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, status,viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Artist, Album, Song, Video
+from .models import Artist, Album, Song, Video,Genre
 from .serializers import (
     ArtistSerializer, AlbumSerializer,
     SongSerializer, VideoSerializer,
-    UserRegisterSerializer
+    UserRegisterSerializer,GenreSerializer
 )
 
 class UserRegisterView(generics.CreateAPIView):
@@ -41,3 +41,24 @@ class VideoListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(uploaded_by=self.request.user)
+
+class ArtistDetailView(generics.RetrieveAPIView):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
+    lookup_field = 'id'
+
+
+class ArtistViewSet(viewsets.ModelViewSet):
+    queryset = Artist.objects.all()
+    serializer_class = ArtistSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+
+
+class GenreListView(generics.ListAPIView):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer

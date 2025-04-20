@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { ArtistCardComponent } from '../../components/artist-card/artist-card.component';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-artists',
   standalone: true,
-  imports: [CommonModule, ArtistCardComponent],
+  imports: [CommonModule,RouterModule],
   templateUrl: './artists.component.html',
   styleUrls: ['./artists.component.css'],
   animations: [
@@ -61,4 +62,14 @@ export class ArtistsComponent implements OnInit {
     // Реализация сортировки
     console.log('Сортировка по:', criteria);
   }
+
+  selectedArtist: any = null;
+
+openDetails(artist: any): void {
+  this.selectedArtist = artist;
+}
+
+closeDetails(): void {
+  this.selectedArtist = null;
+}
 }

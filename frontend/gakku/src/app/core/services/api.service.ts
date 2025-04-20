@@ -30,10 +30,9 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}artists/`, { headers: this.getAuthHeaders() });
   }
 
-  createArtist(artistData: { name: string; debut_year: number }): Observable<any> {
-    return this.http.post(`${this.apiUrl}artists/`, artistData, { headers: this.getAuthHeaders() });
+  createArtist(data: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}artists/`, data);
   }
-
  
   getAlbums(): Observable<any> {
     return this.http.get(`${this.apiUrl}albums/`, { headers: this.getAuthHeaders() });
@@ -62,6 +61,10 @@ export class ApiService {
 
   getSong(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}songs/${id}/`, { headers: this.getAuthHeaders() });
+  }
+
+  getGenres(): Observable<any> {
+    return this.http.get(`${this.apiUrl}genres/`, { headers: this.getAuthHeaders() });
   }
 
   createSong(songData: { title: string; duration: number; album: number }): Observable<any> {
@@ -99,5 +102,9 @@ export class ApiService {
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+  }
+
+  getArtistById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}artists/${id}/`, { headers: this.getAuthHeaders() });
   }
 }

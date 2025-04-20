@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-black text-yellow-400 py-12 px-4">
+    <div class="container mx-auto max-w-3xl bg-zinc-900 border border-yellow-600/30 rounded-lg p-6 shadow-lg">
+  
+      <!-- Загрузка и ошибка -->
+      <div *ngIf="isLoading" class="text-center text-yellow-300">Загрузка...</div>
+      <div *ngIf="error && !isLoading" class="text-center text-red-500">{{ error }}</div>
+  
+      <div *ngIf="!isLoading && artist">
+        <!-- Фото артиста -->
+        <div class="w-full aspect-square overflow-hidden rounded-lg mb-6">
+          <img [src]="artist.photo" [alt]="artist.name" class="w-full h-full object-cover rounded" />
+        </div>
+  
+        <!-- Имя -->
+        <h1 class="text-3xl font-bold uppercase mb-2 text-yellow-400">{{ artist.name }}</h1>
+  
+        <!-- Биография -->
+        <p class="text-yellow-300 mb-4">{{ artist.bio || 'Нет описания' }}</p>
+  
+        <!-- Жанры -->
+        <div class="flex flex-wrap gap-2 mb-4">
+          <span *ngFor="let genre of artist.genres" class="text-xs bg-yellow-500/10 border border-yellow-500/30 px-2 py-1 text-yellow-400 uppercase tracking-wider">
+            {{ genre.name }}
+          </span>
+        </div>
+  
+        <!-- Дебют -->
+        <p class="text-yellow-500 text-sm uppercase tracking-wider">Дебют: {{ artist.debut_year }}</p>
+  
+        <!-- Назад -->
+        <div class="mt-6">
+          <a routerLink="/artists" class="inline-block bg-yellow-500 text-black px-4 py-2 text-sm font-bold uppercase rounded hover:bg-yellow-400 transition">
+            Назад к артистам
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  

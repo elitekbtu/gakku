@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Artist, Album, Song, Video
+from .models import Artist, Album, Song, Video,Genre
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -19,11 +19,25 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['id', 'name']
+
+
 class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = '__all__'
         read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['user'] = request.user
+        return super().create(validated_data)
+
 
 class AlbumSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,3 +54,4 @@ class VideoSerializer(serializers.ModelSerializer):
         model = Video
         fields = '__all__'
         read_only_fields = ('uploaded_by', 'uploaded_at')
+

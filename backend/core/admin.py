@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Artist, Album, Song, Video
+from .models import Artist, Album, Song, Video,Genre
 
 @admin.register(Artist)
 class ArtistAdmin(admin.ModelAdmin):
@@ -20,3 +20,5 @@ class SongAdmin(admin.ModelAdmin):
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('song', 'uploaded_by', 'uploaded_at')
     readonly_fields = ('uploaded_at',)
+
+admin.site.register(Genre)
