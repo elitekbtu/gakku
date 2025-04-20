@@ -1,4 +1,26 @@
+<div class="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black px-6 py-16">
+  <!-- Заголовок -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-extrabold text-yellow-400 tracking-wide animate-fade-in">
+      Наши Артисты
+    </h1>
+    <p class="text-yellow-300 mt-2 text-lg animate-fade-in delay-200">
+      Таланты, которые вдохновляют
+    </p>
+  </div>
 
-<div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-  <app-artist-card *ngFor="let artist of artists" [artist]="artist"></app-artist-card>
+  <!-- Сетка артистов -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-10 animate-fade-in-up">
+    <app-artist-card
+      *ngFor="let artist of artists"
+      [artist]="artist"
+      class="transition transform hover:scale-105 hover:shadow-yellow-400/30 hover:shadow-xl duration-300"
+    >
+    </app-artist-card>
+  </div>
+
+  <!-- Если нет данных -->
+  <div *ngIf="artists.length === 0" class="text-center text-yellow-300 mt-20 text-lg">
+    Нет доступных артистов 🙁
+  </div>
 </div>

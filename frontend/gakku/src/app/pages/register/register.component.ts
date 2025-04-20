@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
@@ -28,15 +28,25 @@ export class RegisterComponent {
   }
 
   onSubmit(): void {
-    if (this.registerForm.invalid) return;
+    if (this.registerForm.invalid) {
+      Object.keys(this.registerForm.controls).forEach(key => {
+        this.registerForm.get(key)?.markAsTouched();
+      });
+      return;
+    }
+
     const { username, email, password } = this.registerForm.value;
+
+    this.error = null;
+    this.success = null;
+
     this.api.register({ username, email, password }).subscribe({
       next: () => {
         this.success = 'Регистрация успешна! Перенаправление...';
         setTimeout(() => this.router.navigate(['/login']), 2000);
       },
-      error: () => {
-        this.error = 'Ошибка при регистрации';
+      error: (err) => {
+        this.error = err?.error?.message || 'Ошибка при регистрации. Пожалуйста, попробуйте снова.';
       }
     });
   }
