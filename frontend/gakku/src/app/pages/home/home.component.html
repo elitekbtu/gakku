@@ -1,14 +1,19 @@
 <div class="min-h-screen bg-black text-yellow-400 relative overflow-hidden">
-  <!-- Фоновый эффект -->
-  <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMjAgMEwyMCA0MEwwIDIwWk00MCAyMEwyMCA0MEwyMCAwWiIgZmlsbD0iIzQyMjkwNSIgZmlsbC1vcGFjaXR5PSIwLjA0Ii8+PC9zdmc+')]"></div>
-  <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-yellow-500/5 to-transparent"></div>
-  
-  <!-- Шумовой фильтр для более грубой текстуры -->
-  <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c4S8BAAAAAXklEQVRIx+3RuQ3AMAwDQRDff+P0bMDpIgLSAovvJJ3K3lELOF2WURfUQA0PZZQ0AiRpHEBKPYCxIgBTdQDmigDUdQCWigDMdQDWigDsOwAHFQGYdgAO1wHYXQewuQ5gfQHAJ4KZwTDHQwAAAABJRU5ErkJggg==');"></div>
-  
-  <!-- Главный контент -->
-  <div class="container mx-auto px-4 py-16 relative z-10">
-    <!-- Заголовок с эффектом глитча -->
+  <!-- 🎥 Видео фон -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-10 z-0">
+    <source src="assets/video.mp4" type="video/mp4" />
+  </video>
+
+  <!-- SVG сетка -->
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48cGF0aCBkPSJNMjAgMEwyMCA0MEwwIDIwWk00MCAyMEwyMCA0MEwyMCAwWiIgZmlsbD0iIzQyMjkwNSIgZmlsbC1vcGFjaXR5PSIwLjA0Ii8+PC9zdmc+')] z-10"></div>
+  <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-yellow-500/5 to-transparent z-10"></div>
+
+  <!-- Шумовой фильтр -->
+  <div class="absolute inset-0 opacity-5 z-10" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXWBgYGHh4d5eXlzc3OLi4ubm5uVlZWPj4+NjY19fX2JiYl/f39ra2uRkZGZmZlpaWmXl5dvb29xcXGTk5NnZ2c4S8BAAAAAXklEQVRIx+3RuQ3AMAwDQRDff+P0bMDpIgLSAovvJJ3K3lELOF2WURfUQA0PZZQ0AiRpHEBKPYCxIgBTdQDmigDUdQCWigDMdQDWigDsOwAHFQGYdgAO1wHYXQewuQ5gfQHAJ4KZwTDHQwAAAABJRU5ErkJggg==');"></div>
+
+  <!-- Контент -->
+  <div class="container mx-auto px-4 py-16 relative z-20">
+    <!-- Заголовок -->
     <div class="text-center mb-16 relative">
       <h1 class="text-6xl font-black tracking-tighter mb-2 relative inline-block glitch-effect">
         <span class="text-yellow-400">GAKKU</span>
@@ -16,8 +21,6 @@
       <p class="text-yellow-300 text-xl mt-4 font-medium max-w-xl mx-auto">
         ОТКРОЙТЕ ДЛЯ СЕБЯ СИЛУ КАЗАХСКОЙ МУЗЫКИ
       </p>
-      
-      <!-- Декоративный элемент вместо линий -->
       <div class="flex justify-center mt-6">
         <div class="w-16 h-16 relative">
           <div class="absolute inset-0 border-2 border-yellow-400 rotate-45 transform-gpu"></div>
@@ -26,7 +29,6 @@
       </div>
     </div>
 
-    <!-- Карточки-ссылки в сетке -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-16 max-w-4xl mx-auto">
       <a routerLink="/artists"
          class="group bg-zinc-900 hover:bg-zinc-800 transition-all duration-300 rounded border-l-4 border-yellow-500 p-6 shadow-xl shadow-yellow-900/20 transform-gpu hover:-translate-y-1">
@@ -104,8 +106,25 @@
         </div>
       </a>
     </div>
-    
-    <!-- Декоративный элемент -->
+
+
+
+
+    <!-- Последние видео -->
+    <div *ngIf="videos.length > 0" class="mt-20">
+      <h2 class="text-3xl font-bold text-yellow-400 mb-6 text-center">Новые Видео</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div *ngFor="let video of videos" class="bg-zinc-900 p-4 rounded-lg shadow-md">
+          <div class="aspect-w-16 aspect-h-9 mb-4">
+            <iframe class="w-full h-full rounded" [src]="video.url | safeUrl" frameborder="0" allowfullscreen></iframe>
+          </div>
+          <p class="text-yellow-300 text-sm">{{ video.song?.title || 'Без названия' }}</p>
+          <p class="text-yellow-600 text-xs">Загружено: {{ video.uploaded_at | date:'short' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Нижний декоративный блок -->
     <div class="flex justify-center mt-20 mb-10">
       <div class="flex space-x-1">
         <div class="w-2 h-2 bg-yellow-500 transform rotate-45"></div>
@@ -113,5 +132,13 @@
         <div class="w-2 h-2 bg-yellow-500 transform rotate-45"></div>
       </div>
     </div>
+  </div>
+</div>
+
+
+
+   
+
+    
  
  
