@@ -1,1 +1,24 @@
-<p>artist-card works!</p>
+<div [routerLink]="['/artists', artist.id]"
+    class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition cursor-pointer">
+    <div class="aspect-square bg-gray-700 relative">
+        <img *ngIf="artist.photo" [src]="getPhotoUrl(artist.photo)" [alt]="artist.name"
+            class="w-full h-full object-cover">
+        <div *ngIf="!artist.photo" class="w-full h-full flex items-center justify-center text-4xl">
+            {{ artist.name.charAt(0) }}
+        </div>
+    </div>
+    <div class="p-3">
+        <h3 class="font-semibold truncate">{{ artist.name }}</h3>
+        <div *ngIf="showDetails" class="mt-2">
+            <p class="text-gray-400 text-sm line-clamp-2">{{ artist.bio }}</p>
+            <div *ngIf="artist.genres?.length" class="flex flex-wrap gap-1 mt-2">
+                <span *ngFor="let genre of artist.genres" class="text-xs px-2 py-1 bg-gray-700 rounded-full">
+                    {{ genre.name }}
+                </span>
+            </div>
+            <p *ngIf="artist.debut_year" class="text-gray-400 text-xs mt-2">
+                Debut year: {{ artist.debut_year }}
+            </p>
+        </div>
+    </div>
+</div>

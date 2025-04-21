@@ -1,1 +1,16 @@
-
+<div [routerLink]="['/albums', album.id]"
+    class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition cursor-pointer">
+    <div class="aspect-square bg-gray-700 relative">
+        <img *ngIf="album.cover" [src]="getCoverUrl(album.cover)" [alt]="album.title"
+            class="w-full h-full object-cover">
+        <div *ngIf="!album.cover" class="w-full h-full flex items-center justify-center text-4xl">
+            {{ album.title.charAt(0) }}
+        </div>
+    </div>
+    <div class="p-3">
+        <h3 class="font-semibold truncate">{{ album.title }}</h3>
+        <p class="text-gray-400 text-sm truncate">
+            {{ album.released_at | date:'yyyy' }}
+        </p>
+    </div>
+</div>
