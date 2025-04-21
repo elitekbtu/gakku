@@ -4,6 +4,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ApiService } from './service/api.service';
+import { PlayerComponent } from './components/player/player.component';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { ApiService } from './service/api.service';
     RouterOutlet, 
     RouterModule, 
     NavbarComponent, 
-    FooterComponent
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

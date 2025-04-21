@@ -1,1 +1,11 @@
-<p>albums works!</p>
+<h1 class="text-2xl font-bold mb-6">Альбомдар</h1>
+
+<div *ngIf="loading" class="text-center text-gray-400">Жүктелуде...</div>
+
+<div *ngIf="!loading && albums.length === 0" class="text-center text-gray-400">
+  Альбомдар табылмады.
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" *ngIf="albums.length > 0">
+  <app-album-card *ngFor="let album of albums" [album]="album"></app-album-card>
+</div>
