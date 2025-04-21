@@ -13,10 +13,10 @@ export class FooterComponent {
   currentYear = new Date().getFullYear();
   
   links = [
-    { path: '/about', name: 'About' },
-    { path: '/terms', name: 'Terms' },
-    { path: '/privacy', name: 'Privacy' },
-    { path: '/contact', name: 'Contact' }
+    { path: '/artists', name: 'Artists' },
+    { path: '/albums', name: 'Albums' },
+    { path: '/songs', name: 'Songs' },
+    { path: '/videos', name: 'Videos' }
   ];
 
   socialLinks = [
