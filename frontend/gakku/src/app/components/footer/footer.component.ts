@@ -20,9 +20,9 @@ export class FooterComponent {
   ];
 
   socialLinks = [
-    { icon: 'facebook', url: '#' },
-    { icon: 'twitter', url: '#' },
-    { icon: 'instagram', url: '#' },
-    { icon: 'youtube', url: '#' }
+    { icon: 'Facebook', url: '#' },
+    { icon: 'Twitter', url: '#' },
+    { icon: 'Instagram', url: '#' },
+    { icon: 'YouTube', url: '#' }
   ];
 }
