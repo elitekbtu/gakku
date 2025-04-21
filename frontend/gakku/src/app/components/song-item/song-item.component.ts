@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 import { Song } from '../../models';
 import { CommonModule } from '@angular/common';
 
@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-song-item',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './song-item.component.html' ,
-  styles: []
+  templateUrl: './song-item.component.html',
+  styleUrls: ['./song-item.component.css']
 })
 export class SongItemComponent {
   @Input() song!: Song;
@@ -24,5 +24,10 @@ export class SongItemComponent {
     const formattedSeconds = String(seconds).padStart(2, '0');
 
     return `${minutes}:${formattedSeconds}`;
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent) {
+    event.stopPropagation();
   }
 }

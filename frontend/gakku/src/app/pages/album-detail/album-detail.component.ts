@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { SongItemComponent } from '../../components/song-item/song-item.component';
 import { finalize } from 'rxjs';
 import { Location } from '@angular/common';
+import { PlayerService } from '../../service/player.service';
 
 @Component({
   selector: 'app-album-detail',
@@ -23,7 +24,8 @@ export class AlbumDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ApiService,
-    private location: Location
+    private location: Location,
+    private playerService: PlayerService
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +62,11 @@ export class AlbumDetailComponent implements OnInit {
         console.error('Error loading songs:', err);
       }
     });
+  }
+
+  playSong(song: Song, index: number): void {
+    this.playerService.setPlaylist(this.songs, index);
+    this.playerService.play();
   }
 
   getCoverUrl(): string {
