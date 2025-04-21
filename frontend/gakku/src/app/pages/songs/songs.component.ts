@@ -1,33 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../service/api.service';
-import { Song } from '../../models';
+import { PlayerService } from '../../service/player.service';
 import { CommonModule } from '@angular/common';
-import { PlayerComponent } from '../../components/player/player.component';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-songs',
   standalone: true,
-  imports: [CommonModule, PlayerComponent,RouterModule],
+  imports: [CommonModule],
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.css']
 })
 export class SongsComponent implements OnInit {
-  songs: Song[] = [];
-  loading = true;
+  songs: any[] = [];
+  isLoading = false;
 
-  constructor(private api: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private playerService: PlayerService
+  ) {}
 
   ngOnInit(): void {
-    this.api.getSongs().subscribe({
-      next: (songs) => {
-        this.songs = songs;
-        this.loading = false;
+    this.loadSongs();
+  }
+
+  loadSongs(): void {
+    this.isLoading = true;
+    this.apiService.getSongs().subscribe({
+      next: (response) => {
+        this.songs = response;
+        this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Failed to load songs', err);
-        this.loading = false;
+      error: (error) => {
+        console.error('Error loading songs:', error);
+        this.isLoading = false;
       }
     });
+  }
+
+  playSong(song: any, index: number): void {
+    this.playerService.setPlaylist(this.songs, index);
   }
 }

@@ -1,38 +1,120 @@
-<!-- Один внешний контейнер с #containerRef -->
-<div #containerRef class="bg-gray-900 p-4 rounded-xl shadow-md text-white flex flex-col gap-2">
-  <div class="flex justify-between items-center">
-    <div>
-      <h3 class="text-lg font-bold">{{ song.title }}</h3>
-      <p class="text-sm text-gray-400">
-        {{ currentTimeDisplay }} / {{ durationDisplay }}
-      </p>
+<div 
+  *ngIf="currentSong | async as song"
+  class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 z-50 border-t border-gray-700"
+>
+  <div class="container mx-auto flex flex-col md:flex-row items-center gap-4">
+    <!-- Song Info -->
+    <div class="flex items-center gap-3 min-w-0 flex-1">
+      <img 
+        [src]="song.album?.cover || 'assets/default-cover.png'" 
+        alt="Cover" 
+        class="w-12 h-12 rounded-md object-cover"
+      >
+      <div class="min-w-0">
+        <h4 class="font-medium truncate">{{ song.title }}</h4>
+        <p class="text-sm text-gray-400 truncate">
+          {{ song.artist?.name || 'Unknown Artist' }}
+        </p>
+      </div>
     </div>
-    <button 
-      (click)="togglePlay()" 
-      class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full shadow"
-    >
-      {{ isPlaying ? 'Pause' : 'Play' }}
-    </button>
-  </div>
 
-  <!-- Кликабельный прогресс-бар -->
-  <div 
-    class="relative h-2 bg-gray-700 rounded-full overflow-hidden mt-2 cursor-pointer"
-    (click)="seek($event)"
-  >
-    <div 
-      class="absolute h-full bg-purple-500 transition-all duration-100"
-      [style.width.%]="progress"
-    ></div>
-  </div>
+    <!-- Player Controls -->
+    <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+      <div class="flex items-center gap-4">
+        <button (click)="player.previous()" class="p-2 text-gray-300 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
 
-  <!-- Невидимый аудиоплеер -->
-  <audio 
-    #audio
-    [src]="getAudioUrl()" 
-    (loadedmetadata)="onLoadedMetadata()"
-    (timeupdate)="onTimeUpdate()" 
-    (ended)="onEnded()" 
-    class="hidden"
-  ></audio>
+        <button 
+          (click)="player.togglePlay()" 
+          class="p-3 bg-green-600 rounded-full hover:bg-green-700"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            class="h-6 w-6" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <ng-container *ngIf="isPlaying | async; else playIcon">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </ng-container>
+            <ng-template #playIcon>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </ng-template>
+          </svg>
+        </button>
+
+        <button (click)="player.next()" class="p-2 text-gray-300 hover:text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="flex items-center gap-2 w-full max-w-md">
+        <span class="text-xs text-gray-400 w-10 text-right">
+          {{ formatTime((progress | async) || 0) }}
+        </span>
+        <input 
+          type="range" 
+          min="0" 
+          max="100" 
+          [value]="((progress | async) || 0) / ((duration | async) || 1) * 100" 
+          (input)="seek($event)"
+          class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+        >
+        <span class="text-xs text-gray-400 w-10">
+          {{ formatTime((duration | async) || 0) }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="flex items-center gap-2 ml-auto">
+      <button (click)="toggleMute()" class="p-2 text-gray-300 hover:text-white">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="h-5 w-5" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <ng-container *ngIf="isMuted || currentVolume === 0; else volumeIcon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+          </ng-container>
+          <ng-template #volumeIcon>
+            <path 
+              *ngIf="currentVolume > 0.5; else volumeDown" 
+              stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2" 
+              d="M15.536 8.464a5 5 0 010 7.072M12 6a7.975 7.975 0 015.657 2.343m0 0a7.975 7.975 0 010 11.314m-11.314 0a7.975 7.975 0 010-11.314m0 0a7.975 7.975 0 015.657-2.343"
+            />
+            <ng-template #volumeDown>
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" 
+                clip-rule="evenodd"
+              />
+            </ng-template>
+          </ng-template>
+        </svg>
+      </button>
+      <input 
+        type="range" 
+        min="0" 
+        max="100" 
+        [value]="currentVolume * 100" 
+        (input)="changeVolume($event)"
+        class="w-24 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+      >
+    </div>
 </div>

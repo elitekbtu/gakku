@@ -1,113 +1,83 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
-import { Song } from '../../models';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { PlayerService } from '../../service/player.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
+interface Song {
+  title: string;
+  artist?: {
+    name: string;
+  };
+  album?: {
+    cover?: string;
+    title?: string;
+  };
+  audio_file: string;
+}
 
 @Component({
   selector: 'app-player',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.css']
 })
-export class PlayerComponent {
-  @Input() song!: Song;
-  @ViewChild('audio', { static: false }) audioRef!: ElementRef<HTMLAudioElement>;
-  @ViewChild('containerRef', { static: false }) containerRef!: ElementRef<HTMLDivElement>;
-
-  isPlaying = false;
-  progress = 0;
-  currentTimeDisplay = '0:00';
-  durationDisplay = '0:00';
-
-  getAudioUrl(): string {
-    return this.song.audio_file.startsWith('http')
-      ? this.song.audio_file
-      : `http://localhost:8000${this.song.audio_file}`;
-  }
-
-  togglePlay() {
-    const audio = this.audioRef.nativeElement;
+export class PlayerComponent implements OnInit, OnDestroy {
+  player = inject(PlayerService);
   
-    if (audio.paused) {
-      audio.play();
-      this.isPlaying = true;
-  
-      // плавная прокрутка к плееру
-      setTimeout(() => {
-        this.containerRef.nativeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }, 50); // ждём чуть-чуть, чтобы DOM точно отрисовался
-    } else {
-      audio.pause();
-      this.isPlaying = false;
-    }
+  currentSong = this.player.currentSong$;
+  isPlaying = this.player.isPlaying$;
+  progress = this.player.progress$;
+  duration = this.player.duration$;
+  volume = this.player.volume$;
+
+  isMuted = false;
+  currentVolume = 0.7;
+  private volumeSub!: Subscription;
+
+  ngOnInit(): void {
+    this.volumeSub = this.volume.subscribe(vol => {
+      this.currentVolume = vol;
+    });
   }
 
-  onLoadedMetadata() {
-    const audio = this.audioRef.nativeElement;
-    if (!isNaN(audio.duration)) {
-      this.durationDisplay = this.formatTime(audio.duration);
-    }
-  }
-
-  onTimeUpdate() {
-    const audio = this.audioRef.nativeElement;
-    const current = audio.currentTime;
-    const total = audio.duration;
-
-    if (!isNaN(total) && total > 0) {
-      this.progress = (current / total) * 100;
-    }
-
-    this.currentTimeDisplay = this.formatTime(current);
-  }
-
-  seek(event: MouseEvent) {
-    const audio = this.audioRef?.nativeElement;
-    if (!audio || isNaN(audio.duration) || audio.duration === 0) {
-      console.warn('⛔ Duration is invalid, skipping seek.');
-      return;
-    }
-    
-    const progressBar = event.currentTarget as HTMLElement;
-    const rect = progressBar.getBoundingClientRect();
-    const offsetX = event.clientX - rect.left;
-    const percentage = offsetX / rect.width;
-    
-    
-    const clampedPercentage = Math.max(0, Math.min(1, percentage));
-    
-    const newTime = clampedPercentage * audio.duration;
- 
-    audio.currentTime = newTime;
-    
-   
-    this.progress = clampedPercentage * 100;
-    this.currentTimeDisplay = this.formatTime(newTime);
-    
-   
-    if (audio.paused) {
-      audio.play()
-        .then(() => {
-          this.isPlaying = true;
-        })
-        .catch(err => {
-          console.error('Failed to play audio:', err);
-        });
-    }
-  }
-
-  onEnded() {
-    this.isPlaying = false;
-    this.progress = 0;
-    this.currentTimeDisplay = '0:00';
+  ngOnDestroy(): void {
+    this.volumeSub.unsubscribe();
   }
 
   formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
+    if (isNaN(seconds)) return '0:00';
+    const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  seek(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.duration.subscribe(duration => {
+      const seekTime = (Number(target.value) / 100) * (duration || 0);
+      this.player.seekTo(seekTime);
+    });
+  }
+
+  changeVolume(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    const newVolume = Number(target.value) / 100;
+    this.player.setVolume(newVolume);
+    this.currentVolume = newVolume;
+    this.isMuted = newVolume === 0;
+  }
+
+  toggleMute(): void {
+    if (this.isMuted) {
+      // Unmute - restore previous volume
+      this.player.setVolume(this.currentVolume > 0 ? this.currentVolume : 0.7);
+      this.isMuted = false;
+    } else {
+      // Mute - store current volume and set to 0
+      this.player.setVolume(0);
+      this.isMuted = true;
+    }
   }
 }

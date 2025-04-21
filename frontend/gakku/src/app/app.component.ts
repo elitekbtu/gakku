@@ -15,6 +15,7 @@ import { PlayerComponent } from './components/player/player.component';
     RouterModule, 
     NavbarComponent, 
     FooterComponent,
+    PlayerComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

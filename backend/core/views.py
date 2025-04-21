@@ -66,9 +66,7 @@ class SongViewSet(viewsets.ModelViewSet):
 class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = VideoSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return Video.objects.filter(uploaded_by=self.request.user)
+    queryset = Video.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(uploaded_by=self.request.user)
