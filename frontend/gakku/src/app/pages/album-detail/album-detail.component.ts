@@ -4,39 +4,62 @@ import { ApiService } from '../../service/api.service';
 import { Album, Song } from '../../models';
 import { CommonModule } from '@angular/common';
 import { SongItemComponent } from '../../components/song-item/song-item.component';
+import { finalize } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-album-detail',
   standalone: true,
-  imports: [CommonModule, SongItemComponent,RouterModule],
+  imports: [CommonModule, SongItemComponent, RouterModule],
   templateUrl: './album-detail.component.html',
   styleUrls: ['./album-detail.component.css']
 })
 export class AlbumDetailComponent implements OnInit {
-  album?: Album;
+  album: Album | null = null;
   songs: Song[] = [];
-  loading = true;
+  isLoading: boolean = true;
+  error: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private api: ApiService
+    private api: ApiService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
-    const albumId = Number(this.route.snapshot.paramMap.get('id'));
-    if (albumId) {
-      this.api.getAlbum(albumId).subscribe(album => {
-        this.album = album;
-      });
-
-      this.api.getSongs({ album_id: albumId }).subscribe(songs => {
-        this.songs = songs;
-        this.loading = false;
-      });
-    }
+    this.loadAlbum();
   }
-  isArtistObject(artist: any): artist is { name: string } {
-    return artist && typeof artist === 'object' && 'name' in artist;
+
+  loadAlbum(): void {
+    const albumId = Number(this.route.snapshot.paramMap.get('id'));
+    if (!albumId) return;
+
+    this.isLoading = true;
+    this.error = null;
+
+    this.api.getAlbum(albumId)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: (album) => {
+          this.album = album;
+          this.loadSongs(albumId);
+        },
+        error: (err) => {
+          console.error('Error loading album:', err);
+          this.error = 'Failed to load album details.';
+        }
+      });
+  }
+
+  loadSongs(albumId: number): void {
+    this.api.getSongs({ album_id: albumId }).subscribe({
+      next: (songs) => {
+        this.songs = songs;
+      },
+      error: (err) => {
+        console.error('Error loading songs:', err);
+      }
+    });
   }
 
   getCoverUrl(): string {
@@ -44,5 +67,13 @@ export class AlbumDetailComponent implements OnInit {
     return this.album.cover.startsWith('http')
       ? this.album.cover
       : `http://localhost:8000${this.album.cover}`;
+  }
+
+  getArtistName(): string {
+    return this.album?.artist?.name || 'Unknown Artist';
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

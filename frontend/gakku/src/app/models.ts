@@ -19,7 +19,7 @@ export interface Genre {
     id: number;
     title: string;
     released_at: string; 
-    artist: Artist | number; 
+    artist: Artist; 
     cover?: string; 
     created_at?: string;
     updated_at?: string;

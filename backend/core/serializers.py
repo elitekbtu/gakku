@@ -33,11 +33,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         read_only_fields = ('user', 'created_at', 'updated_at')
 
 class AlbumSerializer(serializers.ModelSerializer):
-    artist = serializers.StringRelatedField()
-    
+    artist = ArtistSerializer(read_only=True) 
     class Meta:
         model = Album
-        fields = ['id', 'title', 'artist', 'released_at', 'cover', 'created_at', 'updated_at']
+        fields = '__all__'
 
 class SongSerializer(serializers.ModelSerializer):
     album = AlbumSerializer(read_only=True)

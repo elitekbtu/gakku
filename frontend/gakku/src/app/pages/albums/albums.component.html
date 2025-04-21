@@ -1,11 +1,46 @@
-<h1 class="text-2xl font-bold mb-6">Альбомдар</h1>
+<div class="min-h-screen bg-gakku-dark text-white p-6">
+  <ng-container *ngIf="isLoading">
+      <div class="flex justify-center items-center h-64">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gakku-primary"></div>
+      </div>
+  </ng-container>
 
-<div *ngIf="loading" class="text-center text-gray-400">Жүктелуде...</div>
+  <div *ngIf="error && !isLoading" class="bg-red-500/80 text-white p-4 rounded-lg mb-6">
+      {{ error }}
+      <button (click)="loadAlbums()" class="ml-4 underline">Retry</button>
+  </div>
 
-<div *ngIf="!loading && albums.length === 0" class="text-center text-gray-400">
-  Альбомдар табылмады.
-</div>
+  <ng-container *ngIf="!isLoading && !error">
+      <section class="mb-12">
+          <div class="flex justify-between items-center mb-6">
+              <h2 class="text-2xl font-bold">All Albums</h2>
+              <div class="relative flex items-center gap-2">
+                  <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+                      placeholder="Search albums..."
+                      class="bg-gray-800 rounded-full py-2 px-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-gakku-primary">
+                  <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+                      viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  </svg>
+                  <button *ngIf="searchQuery" (click)="clearSearch()"
+                      class="text-gray-400 hover:text-white transition">
+                      Clear
+                  </button>
+              </div>
+          </div>
 
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" *ngIf="albums.length > 0">
-  <app-album-card *ngFor="let album of albums" [album]="album"></app-album-card>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+              <app-album-card *ngFor="let album of filteredAlbums" [album]="album"></app-album-card>
+          </div>
+
+          <div *ngIf="filteredAlbums.length === 0" class="text-center py-12">
+              <p class="text-gray-400">No albums found matching your search</p>
+              <button (click)="clearSearch()"
+                  class="mt-4 px-4 py-2 bg-gakku-primary rounded-full text-sm font-medium hover:bg-opacity-90 transition">
+                  Clear Search
+              </button>
+          </div>
+      </section>
+  </ng-container>
 </div>
