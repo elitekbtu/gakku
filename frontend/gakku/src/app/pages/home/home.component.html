@@ -1,1 +1,82 @@
-<p>home works!</p>
+<div class="min-h-screen bg-gakku-dark text-white p-6">
+    <ng-container *ngIf="isLoading">
+      <div class="flex justify-center items-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gakku-primary"></div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="error && !isLoading" class="bg-red-500/80 text-white p-4 rounded-lg mb-6">
+      {{ error }}
+      <button (click)="loadData()" class="ml-4 underline">Retry</button>
+    </div>
+    <ng-container *ngIf="!isLoading && !error">
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Featured Artists</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          <ng-container *ngFor="let artist of featuredArtists">
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition cursor-pointer">
+              <div class="aspect-square bg-gray-700 relative">
+                <img *ngIf="artist.photo" 
+                     [src]="artist.photo" 
+                     [alt]="artist.name" 
+                     class="w-full h-full object-cover">
+                <div *ngIf="!artist.photo" class="w-full h-full flex items-center justify-center text-4xl">
+                  {{ artist.name.charAt(0) }}
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold truncate">{{ artist.name }}</h3>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+  
+      <!-- Popular Albums -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Popular Albums</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+          <ng-container *ngFor="let album of popularAlbums">
+            <div class="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition cursor-pointer">
+              <div class="aspect-square bg-gray-700 relative">
+                <img *ngIf="album.cover" 
+                     [src]="album.cover" 
+                     [alt]="album.title" 
+                     class="w-full h-full object-cover">
+                <div *ngIf="!album.cover" class="w-full h-full flex items-center justify-center text-4xl">
+                  {{ album.title.charAt(0) }}
+                </div>
+              </div>
+              <div class="p-3">
+                <h3 class="font-semibold truncate">{{ album.title }}</h3>
+                <p class="text-gray-400 text-sm truncate">
+                  {{ getArtistName(album.artist) }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+  
+      <!-- Latest Songs -->
+      <section>
+        <h2 class="text-2xl font-bold mb-6">Latest Songs</h2>
+        <div class="bg-gray-800 rounded-lg overflow-hidden">
+          <ng-container *ngFor="let song of latestSongs; let i = index">
+            <div class="border-b border-gray-700 last:border-b-0 hover:bg-gray-700 transition">
+              <div class="flex items-center p-4">
+                <div class="w-8 text-center text-gray-400">{{ i + 1 }}</div>
+                <div class="flex-grow ml-4">
+                  <h3 class="font-medium">{{ song.title }}</h3>
+                  <p class="text-gray-400 text-sm">
+                    {{ getArtistName(song.artist) }} • {{ getAlbumTitle(song.album) }}
+                  </p>
+                </div>
+                <div class="text-gray-400">{{ formatDuration(song.duration) }}</div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+    </ng-container>
+  </div>
