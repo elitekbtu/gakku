@@ -7,6 +7,7 @@ import { ArtistDetailsComponent } from './pages/artist-detail/artist-detail.comp
 import { AlbumsComponent } from './pages/albums/albums.component';
 import { AlbumDetailComponent } from './pages/album-detail/album-detail.component';
 import { SongsComponent } from './pages/songs/songs.component';
+import { VideosComponent } from './pages/videos/videos.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'artists/:id', component: ArtistDetailsComponent },
   { path: 'albums', component: AlbumsComponent },
   { path: 'albums/:id', component: AlbumDetailComponent },
-  {path:'songs',component:SongsComponent}
+  {path:'songs',component:SongsComponent},
+  {path:'videos',component:VideosComponent}
 ];

@@ -1,1 +1,16 @@
-<p>videos works!</p>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-white mb-6">🎬 Бейнебаяндар</h1>
+  
+    <div *ngIf="loading" class="text-gray-400 text-center">
+      Жүктелуде...
+    </div>
+  
+    <div *ngIf="!loading && videos.length === 0" class="text-gray-500 text-center">
+      Видео табылған жоқ.
+    </div>
+  
+    <div *ngIf="!loading && videos.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-video-card *ngFor="let video of videos" [video]="video"></app-video-card>
+    </div>
+  </div>
+  
