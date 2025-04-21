@@ -1,1 +1,51 @@
-<p>footer works!</p>
+<footer class="bg-gray-800 text-gray-400 border-t border-gray-700">
+    <div class="container mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Logo and description -->
+        <div class="md:col-span-2">
+          <h2 class="text-2xl font-bold text-indigo-400 mb-4">Gakku</h2>
+          <p class="text-sm mb-4">Your ultimate music streaming experience. Discover new artists, albums and songs.</p>
+          <div class="flex space-x-4">
+            <ng-container *ngFor="let social of socialLinks">
+              <a [href]="social.url" class="hover:text-indigo-400 transition">
+                <span class="material-icons">{{ social.icon }}</span>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+  
+        <!-- Quick Links -->
+        <div>
+          <h3 class="text-white font-medium mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li *ngFor="let link of links">
+              <a [routerLink]="link.path" class="hover:text-indigo-400 transition text-sm">
+                {{ link.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+  
+        <!-- Newsletter -->
+        <div>
+          <h3 class="text-white font-medium mb-4">Newsletter</h3>
+          <p class="text-sm mb-4">Subscribe to get updates and news.</p>
+          <div class="flex">
+            <input 
+              type="email" 
+              placeholder="Your email" 
+              class="bg-gray-700 text-white px-3 py-2 rounded-l focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm w-full"
+            >
+            <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-r text-white text-sm transition">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Copyright -->
+      <div class="border-t border-gray-700 mt-8 pt-6 text-sm text-center">
+        &copy; {{ currentYear }} Gakku Music. All rights reserved.
+      </div>
+    </div>
+  </footer>

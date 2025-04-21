@@ -1,1 +1,8 @@
-<p>login works!</p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-indigo-900">
+    <app-auth-form 
+      title="Welcome to Gakku" 
+      buttonText="Sign In" 
+      [isLogin]="true"
+      (onSubmit)="handleLogin($event)"
+    ></app-auth-form>
+  </div>

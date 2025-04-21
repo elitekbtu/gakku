@@ -4,7 +4,12 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'gakku-primary': '#4f46e5',
+        'gakku-dark': '#1e1e2d',
+      },
+    },
   },
   plugins: [],
 }

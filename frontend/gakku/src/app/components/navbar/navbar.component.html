@@ -1,1 +1,50 @@
-<p>navbar works!</p>
+<nav class="bg-gray-800 shadow-lg">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a routerLink="/" class="text-xl font-bold text-indigo-400">Gakku</a>
+        </div>
+  
+        <!-- Main Menu -->
+        <div class="hidden md:flex space-x-4">
+          <ng-container *ngFor="let item of menuItems">
+            <a 
+              [routerLink]="item.path" 
+              routerLinkActive="text-indigo-400 border-b-2 border-indigo-400"
+              class="px-3 py-2 text-sm font-medium hover:text-indigo-300 transition"
+            >
+              {{ item.name }}
+            </a>
+          </ng-container>
+        </div>
+  
+        <!-- Auth Buttons -->
+        <div class="flex items-center space-x-4">
+          <ng-container *ngIf="!isAuthenticated; else authControls">
+            <a 
+              routerLink="/login" 
+              class="px-3 py-1 text-sm font-medium hover:text-indigo-300 transition"
+            >
+              Login
+            </a>
+            <a 
+              routerLink="/register" 
+              class="px-3 py-1 rounded bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
+            >
+              Sign Up
+            </a>
+          </ng-container>
+  
+          <ng-template #authControls>
+            <button 
+              (click)="logout.emit()"
+              class="px-3 py-1 rounded bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition"
+            >
+              Logout
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </nav>
