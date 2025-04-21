@@ -7,6 +7,7 @@ import { SongItemComponent } from '../../components/song-item/song-item.componen
 import { AlbumCardComponent } from '../../components/album-card/album-card.component';
 import { finalize } from 'rxjs';
 import { Location } from '@angular/common';
+import { PlayerService } from '../../service/player.service';
 
 @Component({
   selector: 'app-artist-details',
@@ -25,7 +26,8 @@ export class ArtistDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private apiService: ApiService,
-    private location: Location 
+    private location: Location,
+    private playerService: PlayerService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,11 @@ export class ArtistDetailsComponent implements OnInit {
         console.error('Error loading songs:', err);
       }
     });
+  }
+
+  playSong(song: Song, index: number): void {
+    this.playerService.setPlaylist(this.songs, index);
+    this.playerService.play();
   }
 
   getPhotoUrl(photo: string): string {

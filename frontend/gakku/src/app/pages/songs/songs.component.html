@@ -1,45 +1,74 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-3xl font-bold text-white mb-8">All Songs</h1>
+<div class="min-h-screen text-gray-200 p-6 px-4 sm:px-6 lg:px-8 pt-8 pb-12
+            rounded-lg overflow-hidden shadow-xl
+            bg-gradient-to-b from-gray-900 to-gray-800 mx-auto max-w-screen-xl">
 
-  <div *ngIf="isLoading" class="flex justify-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+  <ng-container *ngIf="isLoading">
+    <div class="flex justify-center items-center h-96">
+      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-gakku-primary"></div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="error && !isLoading" class="bg-red-600/90 text-white p-5 rounded-lg shadow-md mb-8 flex justify-between items-center">
+    <span>{{ error }}</span>
+    <button (click)="loadSongs()" class="ml-4 text-sm underline hover:text-gray-200 transition-colors">Try Again</button>
   </div>
 
-  <div *ngIf="!isLoading" class="grid gap-4">
-    <div 
-      *ngFor="let song of songs; let i = index"
-      (click)="playSong(song, i)"
-      class="flex items-center gap-4 p-4 bg-gray-800 rounded-lg hover:bg-gray-700 cursor-pointer transition-colors"
-    >
-      <div class="w-12 h-12 flex-shrink-0 relative">
-        <img 
-          [src]="song.album?.cover || 'assets/default-cover.png'" 
-          alt="Cover" 
-          class="w-full h-full rounded-md object-cover"
-        >
-        <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            class="h-6 w-6 text-white" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+  <ng-container *ngIf="!isLoading && !error">
+    <section class="mb-8 lg:mb-12">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+        <h2 class="text-3xl font-bold mb-4 sm:mb-0 text-white">All Tracks</h2>
+
+        <div class="relative flex items-center gap-2 w-full sm:w-auto">
+          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
+                 placeholder="Search tracks..." class="bg-gray-800 rounded-full py-2 px-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-gakku-primary w-full sm:w-64 placeholder-gray-400 text-gray-200">
+
+          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
+
+          <button *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors text-sm focus:outline-none">
+            Clear
+          </button>
         </div>
       </div>
 
-      <div class="min-w-0 flex-1">
-        <h3 class="font-medium text-white truncate">{{ song.title }}</h3>
-        <p class="text-sm text-gray-400 truncate">
-          {{ song.artist?.name }} • {{ song.album?.title || 'Single' }}
-        </p>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold mb-4 text-white">Filter by Genres</h3>
+        <div class="flex flex-wrap gap-3">
+          <label *ngFor="let genre of genres"
+                 class="px-4 py-1 rounded-full cursor-pointer text-sm transition-colors duration-300 font-medium"
+                 [ngClass]="{
+                   'bg-gakku-primary text-white': selectedGenreIds.includes(genre.id),
+                   'bg-gray-700 text-gray-300 hover:bg-gray-600': !selectedGenreIds.includes(genre.id)
+                 }">
+            <input type="checkbox"
+                   [checked]="selectedGenreIds.includes(genre.id)"
+                   (change)="onGenreFilterChange(genre.id, $event)"
+                   class="hidden">
+            {{ genre.name }}
+          </label>
+        </div>
       </div>
 
-      <div class="text-sm text-gray-400">
-        {{ (song.duration / 60).toFixed(2).replace('.', ':') }}
+      <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+        <app-song-item
+          *ngFor="let song of filteredSongs; let i = index"
+          [song]="song"
+          [index]="i + 1"
+          (click)="playSong(song, i)">
+        </app-song-item>
       </div>
-    </div>
-  </div>
+
+      <div *ngIf="filteredSongs.length === 0" class="text-center py-12 bg-gray-800 rounded-lg mt-8 shadow-lg">
+        <p class="text-gray-400 text-lg mb-4">No tracks found matching your criteria.</p>
+        <button (click)="clearFilters()"
+                class="px-6 py-2 bg-gakku-primary text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors shadow-md">
+          Reset Filters
+        </button>
+      </div>
+    </section>
+  </ng-container>
 </div>

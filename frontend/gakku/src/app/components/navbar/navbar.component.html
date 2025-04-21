@@ -1,50 +1,48 @@
-<nav class="bg-gray-800 shadow-lg">
-    <div class="container mx-auto px-4">
-      <div class="flex justify-between items-center h-16">
-        <!-- Logo -->
-        <div class="flex items-center">
-          <a routerLink="/" class="text-xl font-bold text-indigo-400">Gakku</a>
-        </div>
-  
-        <!-- Main Menu -->
-        <div class="hidden md:flex space-x-4">
-          <ng-container *ngFor="let item of menuItems">
-            <a 
-              [routerLink]="item.path" 
-              routerLinkActive="text-indigo-400 border-b-2 border-indigo-400"
-              class="px-3 py-2 text-sm font-medium hover:text-indigo-300 transition"
-            >
-              {{ item.name }}
-            </a>
-          </ng-container>
-        </div>
-  
-        <!-- Auth Buttons -->
-        <div class="flex items-center space-x-4">
-          <ng-container *ngIf="!isAuthenticated; else authControls">
-            <a 
-              routerLink="/login" 
-              class="px-3 py-1 text-sm font-medium hover:text-indigo-300 transition"
-            >
-              Login
-            </a>
-            <a 
-              routerLink="/register" 
-              class="px-3 py-1 rounded bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition"
-            >
-              Sign Up
-            </a>
-          </ng-container>
-  
-          <ng-template #authControls>
-            <button 
-              (click)="logout.emit()"
-              class="px-3 py-1 rounded bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition"
-            >
-              Logout
-            </button>
-          </ng-template>
-        </div>
+<nav class="bg-gray-800 shadow-lg bg-gradient-to-r from-gray-800 to-gray-700">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center">
+        <a routerLink="/" class="text-xl font-bold text-indigo-400 hover:text-indigo-300 transition duration-300 ease-in-out">Gakku</a>
+      </div>
+
+      <div class="hidden md:flex space-x-6">
+        <ng-container *ngFor="let item of menuItems">
+          <a
+            [routerLink]="item.path"
+            routerLinkActive="text-indigo-400 border-b-2 border-indigo-400 font-semibold"
+            class="px-3 py-2 text-sm font-medium text-gray-300 hover:text-indigo-300 transition duration-300 ease-in-out relative group"
+          >
+            {{ item.name }}
+            <span class="absolute inset-x-0 bottom-0 h-0.5 bg-indigo-400 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"></span>
+          </a>
+        </ng-container>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <ng-container *ngIf="!isAuthenticated; else authControls">
+          <a
+            routerLink="/login"
+            class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-indigo-300 transition duration-300 ease-in-out rounded-md border border-transparent hover:border-indigo-300"
+          >
+            Login
+          </a>
+          <a
+            routerLink="/register"
+            class="px-4 py-2 rounded-md bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 transition duration-300 ease-in-out shadow-md hover:shadow-lg"
+          >
+            Sign Up
+          </a>
+        </ng-container>
+
+        <ng-template #authControls>
+          <button
+            (click)="logout.emit()"
+            class="px-4 py-2 rounded-md bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition duration-300 ease-in-out shadow-md hover:shadow-lg"
+          >
+            Logout
+          </button>
+        </ng-template>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>

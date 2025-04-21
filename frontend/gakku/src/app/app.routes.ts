@@ -18,6 +18,6 @@ export const routes: Routes = [
   { path: 'artists/:id', component: ArtistDetailsComponent },
   { path: 'albums', component: AlbumsComponent },
   { path: 'albums/:id', component: AlbumDetailComponent },
-  {path:'songs',component:SongsComponent},
-  {path:'videos',component:VideosComponent}
+  { path: 'songs', component:SongsComponent},
+  { path: 'videos', component:VideosComponent}
 ];

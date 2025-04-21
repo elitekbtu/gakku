@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { ApiService } from '../../service/api.service';
 import { AuthFormComponent } from '../../components/auth-form/auth-form.component';
 
@@ -13,7 +12,6 @@ import { AuthFormComponent } from '../../components/auth-form/auth-form.componen
 export class LoginComponent {
   constructor(
     private apiService: ApiService,
-    private router: Router
   ) {}
 
   handleLogin(credentials: { username: string; password: string }) {
@@ -21,7 +19,8 @@ export class LoginComponent {
       next: (response) => {
         localStorage.setItem('access_token', response.access);
         localStorage.setItem('refresh_token', response.refresh);
-        this.router.navigate(['/']);
+        console.log('Login successful, navigating to / with full reload...');
+        window.location.href = '/';
       },
       error: (error) => {
         console.error('Login error:', error);
