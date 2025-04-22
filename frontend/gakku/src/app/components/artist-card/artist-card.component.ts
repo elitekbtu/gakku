@@ -1,4 +1,3 @@
-// src/app/components/artist-card/artist-card.component.ts
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Artist } from '../../models';

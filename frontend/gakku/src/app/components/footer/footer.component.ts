@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();

@@ -71,11 +71,9 @@ export class PlayerComponent implements OnInit, OnDestroy {
 
   toggleMute(): void {
     if (this.isMuted) {
-      // Unmute - restore previous volume
       this.player.setVolume(this.currentVolume > 0 ? this.currentVolume : 0.7);
       this.isMuted = false;
     } else {
-      // Mute - store current volume and set to 0
       this.player.setVolume(0);
       this.isMuted = true;
     }

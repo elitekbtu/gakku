@@ -22,7 +22,6 @@ export class HomeComponent implements OnInit {
   isLoading = true;
   error: string | null = null;
 
-  // Constants for display limits
   readonly ARTISTS_LIMIT = 6;
   readonly ALBUMS_LIMIT = 6;
   readonly SONGS_LIMIT = 8;
@@ -37,7 +36,6 @@ export class HomeComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    // Use forkJoin to load all data in parallel
     forkJoin({
       genres: this.apiService.getGenres().pipe(
         catchError(err => this.handleError('genres', err))
@@ -68,7 +66,7 @@ export class HomeComponent implements OnInit {
 
   private handleError(context: string, error: any): Observable<null> {
     console.error(`Error loading ${context}:`, error);
-    return of(null); // Return null to keep forkJoin working
+    return of(null); 
   }
 
   formatDuration(duration: number): string {

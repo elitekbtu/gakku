@@ -77,12 +77,10 @@ export class ArtistsComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredArtists = this.artists.filter(artist => {
-      // Search filter
       const matchesSearch = !this.searchQuery || 
         artist.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         (artist.bio && artist.bio.toLowerCase().includes(this.searchQuery.toLowerCase()));
       
-      // Genre filter
       const matchesGenres = this.selectedGenreIds.length === 0 ||
         (artist.genres && artist.genres.some(genre => 
           this.selectedGenreIds.includes(genre.id)));
