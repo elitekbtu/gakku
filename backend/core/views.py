@@ -1,12 +1,15 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
+from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
+
 from .models import Artist, Album, Song, Video, Genre
 from .serializers import (
     ArtistSerializer, AlbumSerializer,
     SongSerializer, VideoSerializer,
     UserRegisterSerializer, GenreSerializer
 )
-from rest_framework.generics import CreateAPIView
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
@@ -14,10 +17,19 @@ class UserRegisterView(CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
 
-class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+@api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
+def genre_list_create(request):
+    if request.method == 'GET':
+        genres = Genre.objects.all()
+        serializer = GenreSerializer(genres, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = GenreSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ArtistViewSet(viewsets.ModelViewSet):
     queryset = Artist.objects.all()
@@ -63,10 +75,17 @@ class SongViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(genres__id=genre_id)
         return queryset
 
-class VideoViewSet(viewsets.ModelViewSet):
-    serializer_class = VideoSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Video.objects.all()
 
-    def perform_create(self, serializer):
-        serializer.save(uploaded_by=self.request.user)
+@api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticated])
+def video_list_create(request):
+    if request.method == 'GET':
+        videos = Video.objects.all()
+        serializer = VideoSerializer(videos, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = VideoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(uploaded_by=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

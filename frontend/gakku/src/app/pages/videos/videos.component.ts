@@ -46,18 +46,5 @@ export class VideosComponent implements OnInit {
     });
   }
 
-  onSearchChange(): void {
-    if (!this.searchQuery) {
-      this.filteredVideos = [...this.videos];
-      return;
-    }
-
-    const searchLower = this.searchQuery.toLowerCase();
-    this.filteredVideos = this.videos.filter(video => {
-      if (video.song && video.song.title) {
-        return video.song.title.toLowerCase().includes(searchLower);
-      }
-      return false;
-    });
-  }
+ 
 }

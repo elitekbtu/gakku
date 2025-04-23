@@ -17,22 +17,6 @@
     <section class="mb-12 lg:mb-16">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <h2 class="text-3xl font-bold mb-4 sm:mb-0 text-white">All Videos</h2>
-
-        <div class="relative flex items-center gap-2 w-full sm:w-auto">
-          <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()"
-                 placeholder="Search by track name..." class="bg-gray-800 rounded-full py-2 px-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-gakku-primary w-full sm:w-64 placeholder-gray-400 text-gray-200">
-
-          <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
-               viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-
-          <button *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()"
-                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors text-sm focus:outline-none">
-            Clear
-          </button>
-        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -44,14 +28,10 @@
 
       <div *ngIf="filteredVideos.length === 0" class="text-center py-12 bg-gray-800 rounded-lg mt-8 shadow-lg">
         <p class="text-gray-400 text-lg">
-          {{ searchQuery ? 'No videos found for your query.' : 'No videos available yet.' }}
+          No videos available yet.
         </p>
-
-        <button *ngIf="searchQuery" (click)="searchQuery = ''; onSearchChange()"
-                class="mt-4 px-6 py-2 bg-gakku-primary text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors shadow-md">
-          Reset Search
-        </button>
       </div>
     </section>
   </ng-container>
 </div>
+
