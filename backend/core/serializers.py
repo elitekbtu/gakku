@@ -4,14 +4,22 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password', 'confirm_password']
+    
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords don't match")
+        return data
     
     def create(self, validated_data):
+        validated_data.pop('confirm_password')
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
@@ -19,10 +27,37 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+# Serializer 1
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+        
+        if not username or not password:
+            raise serializers.ValidationError("Both username and password are required")
+        return data
+
+# ModelSerializer 2
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['id', 'name']
+
+# Serializer 2
+class StatsSerializer(serializers.Serializer):
+    artist_count = serializers.IntegerField()
+    album_count = serializers.IntegerField()
+    song_count = serializers.IntegerField()
+    
+    def to_representation(self, instance):
+        return {
+            'artist_count': instance['artist_count'],
+            'album_count': instance['album_count'],
+            'song_count': instance['song_count'],
+        }
 
 class ArtistSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True, read_only=True)
