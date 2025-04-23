@@ -3,11 +3,15 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
       <div class="md:col-span-2">
         <h2 class="text-3xl font-bold text-indigo-400 mb-4">Gakku</h2>
+
         <p class="text-sm mb-6 max-w-sm">Your ultimate music streaming experience. Discover new artists, albums and songs with seamless playback.</p>
         <div class="flex space-x-6">
+
           <ng-container *ngFor="let social of socialLinks">
             <a [href]="social.url" class="text-gray-400 hover:text-indigo-400 transition-colors duration-300" [attr.aria-label]="social.name">
+
               <i class="{{ social.iconClass }} text-2xl"></i>
+
               </a>
           </ng-container>
         </div>
@@ -17,6 +21,7 @@
         <h3 class="text-white font-semibold mb-6 text-lg">Quick Links</h3>
         <ul class="space-y-3">
           <li *ngFor="let link of links">
+
             <a [routerLink]="link.path" class="hover:text-indigo-400 transition-colors duration-300 text-sm">
               {{ link.name }}
             </a>
@@ -28,9 +33,11 @@
         <h3 class="text-white font-semibold mb-6 text-lg">Newsletter</h3>
         <p class="text-sm mb-4">Subscribe to get the latest updates and news directly in your inbox.</p>
         <div class="flex flex-col sm:flex-row gap-3">
+
           <input
             type="email"
             placeholder="Enter your email"
+
             class="flex-grow bg-gray-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm placeholder-gray-400"
           >
           <button class="bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-md text-white text-sm font-medium transition-colors duration-300 flex-shrink-0">
@@ -41,6 +48,7 @@
     </div>
 
     <div class="border-t border-gray-800 mt-10 pt-8 text-sm text-center text-gray-500">
+      
       &copy; {{ currentYear }} Gakku Music. All rights reserved.
     </div>
   </div>
