@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 export class NavbarComponent {
   @Input() isAuthenticated = false;
   @Output() logout = new EventEmitter<void>();
-
+  
   menuItems = [
     { path: '/', name: 'Home', icon: 'home' },
     { path: '/artists', name: 'Artists', icon: 'people' },
