@@ -27,7 +27,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
-# Serializer 1
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -40,13 +39,13 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Both username and password are required")
         return data
 
-# ModelSerializer 2
+
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['id', 'name']
 
-# Serializer 2
+
 class StatsSerializer(serializers.Serializer):
     artist_count = serializers.IntegerField()
     album_count = serializers.IntegerField()
